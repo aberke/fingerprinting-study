@@ -1,0 +1,47 @@
+<!-- use local style for testing -->
+<!-- <link rel="stylesheet" href="./index.css"> -->
+<link rel="stylesheet" href="https://aberke.github.io/fingerprinting-study/instrument/index.css">
+
+<div class="Q-container">
+    <p>
+    We would like to collect attributes from your web browser in order to study how web users' 
+    devices may be tracked across websites they visit. 
+    This data is regularly collected by other websites you visit and is specific to your device.  
+    We will only collect this data if you click "Consent to share".
+    </p>
+    <br/>
+    <p>
+    Data you share will be published for research. 
+    It is possible that if another website collects these attributes, 
+    they can be used to identify your device in the published dataset. 
+    You will be compensated for participating in the study whether you consent or decline to share the data.
+    </p>
+    <br/>
+    <div id="data-container" class="table-container">
+    </div>
+    <p id="rows-count"></p>
+    <br/>
+    <br/>
+
+    <!-- using class instead of id in order to be consistent with Qualtrics usecase -->
+    <div class="test-choice-container" style="display: none;">
+        <ul>
+            <a id="download-csv"><li>Consent to share</li></a>
+            <li>Decline</li>
+        </ul>
+        <br/>
+        <br/>
+        <p>(Debug only) Fingerprint: <span id="fingerprint"></span></p>
+    </div> 
+</div>
+<script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+
+<!-- This library must be hosted by us because browsers block fingerprintjs domains -->
+<!-- another option is to include the compressed js directly here -->
+<!-- <script src="./fpjs.js"></script> -->
+<script src="https://aberke.github.io/fingerprinting-study/instrument/fpjs.js"></script>
+
+
+<!-- use local file for testing only -->
+<!-- <script src="./index.js"></script> -->
+<script src="https://aberke.github.io/fingerprinting-study/instrument/index.js"></script>
