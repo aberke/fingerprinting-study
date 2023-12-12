@@ -205,6 +205,8 @@ function getFingerprintJsComponentList(component, depth) {
 
 function getFingerprint(attributesToValues) {
     // Returns a promise
+    // Make a canonical string representing the attributes.
+    // But exclude 'cookies enabled' because this is specific to the site.
     let canonicalString = attributesToCanonicalString(attributesToValues);
     const utf8 = new TextEncoder().encode(canonicalString);
     return crypto.subtle.digest('SHA-256', utf8).then(function(hashBuffer) {
@@ -217,13 +219,14 @@ function getFingerprint(attributesToValues) {
 }
 
 function attributesToCanonicalString(attributesToValues) {
+    // Exclude 'Cookies enabled' because it is specific to the site.
     let result = '';
     for (const attributeName of Object.keys(attributesToValues).sort()) {
+        if (attributeName === 'Cookies enabled') { continue; }
         let value = attributesToValues[attributeName];
         if (typeof value != 'string') {
             value = JSON.stringify(value);
-        }
-        
+        } 
         result += (result.length > 0) ? ('|' + value) : value;
     }
     return result;
