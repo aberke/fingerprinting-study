@@ -250,14 +250,14 @@ function buildCsvFile(attributesToValues) {
 }
 
 let dataContainerElt = document.getElementById('data-container');
+let rowsCountElt = document.getElementById('rows-count');
 dataContainerElt.style.display = 'none';
 function buildTable(attributesToValues) {
     // In case the respondent previously inserted a file that passed validation:
     // Clear out (possibly) previously inserted data.
     dataContainerElt.innerHTML = '';
     let totalRows = Object.keys(attributesToValues).length;
-    let totalRowsP = document.getElementById('rows-count');
-    totalRowsP.appendChild(document.createTextNode(totalRows.toString() + ' rows (scroll)'));
+    rowsCountElt.appendChild(document.createTextNode(totalRows.toString() + ' rows (scroll)'));
     
     let tableElt = document.createElement('table');
     var tableBodyElt = document.createElement('tbody');
@@ -284,6 +284,10 @@ function buildTable(attributesToValues) {
     dataContainerElt.appendChild(tableElt);
     if (showData) {
         dataContainerElt.style.display = 'block';
+        rowsCountElt.style.display = 'block';
+    } else {
+        dataContainerElt.style.display = 'none';
+        rowsCountElt.style.display = 'none';
     }
 }
 
