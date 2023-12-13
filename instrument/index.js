@@ -175,10 +175,11 @@ let fingerprint = null;
 let fingerprintJsComponents = null;
 
 function getAttributes() {
+    let a = {};
     for (var attributeName in attributeGetters) {
-        attributeToValueMap[attributeName] = attributeGetters[attributeName]();
+        a[attributeName] = attributeGetters[attributeName]();
     }
-    return attributeToValueMap;
+    return a;
 }
 
 function getUserAgent() {
@@ -186,21 +187,41 @@ function getUserAgent() {
 }
 
 function getPlugins() {
-    // plugins: {name: 'name', description: 'description', 'mimeTypes': list}
-    let plugins = fingerprintJsComponents['plugins'].value;
-    return JSON.stringify(plugins.map(plugin => plugin.name));
+    try { 
+        // plugins: {name: 'name', description: 'description', 'mimeTypes': list}
+        let plugins = fingerprintJsComponents['plugins'].value;
+        return JSON.stringify(plugins.map(plugin => plugin.name));
+    } catch {
+        console.error('Error flattening component: ', component);
+        return;
+    }
 }
 
 function getCanvas() {
-    return fingerprintJsComponents['canvas'].value.text;
+    try { 
+        return fingerprintJsComponents['canvas'].value.text;
+    } catch {
+        console.error('Error flattening component: ', component);
+        return;
+    }
 }
 
 function getFingerprintJsComponentValue(component) {
-    return JSON.stringify(fingerprintJsComponents[component].value);
+    try { 
+        return JSON.stringify(fingerprintJsComponents[component].value);
+    } catch {
+        console.error('Error flattening component: ', component);
+        return;
+    }
 }
 
 function getFingerprintJsComponentList(component, depth) {
-    return JSON.stringify(fingerprintJsComponents[component].value.flat(depth));
+    try { 
+        return JSON.stringify(fingerprintJsComponents[component].value.flat(depth)); 
+    } catch {
+        console.error('Error flattening component: ', component);
+        return;
+    }
 }
 
 function getFingerprint(attributesToValues) {
@@ -238,15 +259,14 @@ function buildCsvFile(attributesToValues) {
     for (var attributeName in attributesToValues) {
         csvData.push([attributeName, attributesToValues[attributeName]]);
     }
-    let csv = Papa.unparse({'fields':['Attribute','Value'], 'data':csvData});
+    let csv = Papa.unparse({'fields':['Attribute', 'Value'], 'data':csvData});
     if (isDebug) {
         // set up the test share button so that click downloads the csv
         let a = document.getElementById('download-csv');
         a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
         a.setAttribute('download', 'attributes-values.csv');
     }
-    csvFile = new Blob([csv], {type:'text/csv'});
-    return csvFile
+    return new Blob([csv], {type:'text/csv'});
 }
 
 let dataContainerElt = document.getElementById('data-container');
@@ -343,7 +363,7 @@ function createSurveyResponseForFile(surveyId, responseId, f, fQID) {
 
 function main() {
     // call fingerprintjs which returns a promise
-    let fpPromise = FingerprintJS.load()
+    FingerprintJS.load()
     .then(function(fp) { return fp.get() })
     .then(function(result) { 
         fingerprintJsComponents = result.components;
@@ -353,6 +373,10 @@ function main() {
     .then(function(attributesToValues) {
         attributeToValueMap = attributesToValues;
         csvFile = buildCsvFile(attributesToValues);
+        // build the table
+        buildTable(attributesToValues);
+        checkEnableNext();
+        // get the fingerprint only for debugging purposes
         getFingerprint(attributesToValues).then(function(fp) {
             fingerprint = fp;
             console.log('Fingerprint:\n'+fingerprint);
@@ -361,9 +385,6 @@ function main() {
                 document.getElementById('fingerprint').innerHTML = fingerprint;
             }
         });
-        // build the table
-        buildTable(attributesToValues);
-        checkEnableNext();
     });
 }
 
