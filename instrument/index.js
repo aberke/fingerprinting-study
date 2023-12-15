@@ -135,7 +135,6 @@ make a fingerprint with all the values; log it
 if debug: show fingerprint
 
 */
-
 let attributes = [
     'User agent',
     'Languages',
@@ -191,8 +190,8 @@ function getPlugins() {
         // plugins: {name: 'name', description: 'description', 'mimeTypes': list}
         let plugins = fingerprintJsComponents['plugins'].value;
         return JSON.stringify(plugins.map(plugin => plugin.name));
-    } catch {
-        console.error('Error flattening component: ', component);
+    } catch(e) {
+        console.error('Error flattening component: ', component, e);
         return;
     }
 }
@@ -200,8 +199,8 @@ function getPlugins() {
 function getCanvas() {
     try { 
         return fingerprintJsComponents['canvas'].value.text;
-    } catch {
-        console.error('Error flattening component: ', component);
+    } catch(e) {
+        console.error('Error flattening component: ', component, e);
         return;
     }
 }
@@ -209,8 +208,8 @@ function getCanvas() {
 function getFingerprintJsComponentValue(component) {
     try { 
         return JSON.stringify(fingerprintJsComponents[component].value);
-    } catch {
-        console.error('Error flattening component: ', component);
+    } catch(e) {
+        console.error('Error flattening component: ', component, e);
         return;
     }
 }
@@ -218,8 +217,8 @@ function getFingerprintJsComponentValue(component) {
 function getFingerprintJsComponentList(component, depth) {
     try { 
         return JSON.stringify(fingerprintJsComponents[component].value.flat(depth)); 
-    } catch {
-        console.error('Error flattening component: ', component);
+    } catch(e) {
+        console.error('Error flattening component: ', component, e);
         return;
     }
 }
@@ -450,6 +449,6 @@ if (qualtricsDeclared) {
             }
         }
     });
-    console.log('Qualtrics script bottom')
+    console.log('Qualtrics script bottom');
 }
 console.log('script bottom');
