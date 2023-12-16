@@ -145,15 +145,19 @@ let attributes = [
     'Screen resolution',
     'Color depth',
     'Platform',
-    'Canvas',
+    'Canvas text',
+    'Canvas geometry',
+    'Cookies enabled',  // true/false
+    // 'Audio', // real number produced by hashing values over a sound wave
+    'Touch points', // Touch support max touch points
+    // WebGL fingerprinting attributes were added in v4
     'WebGL Vendor',
     'WebGL Renderer',
-    'Cookies enabled',  // true/false
 ];
 
 const attributeGetters = {
     'User agent': getUserAgent,
-    'Languages': function() { return getFingerprintJsComponentList('languages', 2); },
+    'Language': getLanguage,
     'Fonts': function() { return getFingerprintJsComponentList('fonts', 2); },
     'Plugins': getPlugins,
     'Local storage': function() { return getFingerprintJsComponentValue('localStorage'); },
@@ -161,10 +165,15 @@ const attributeGetters = {
     'Screen resolution': function() { return getFingerprintJsComponentList('screenResolution', 2); },
     'Color depth': function() { return fingerprintJsComponents['colorDepth'].value; },
     'Platform': function() { return fingerprintJsComponents['platform'].value; },
-    'Canvas': getCanvas,
-    'WebGL Vendor': function() { return fingerprintJsComponents['webGlBasics'].value.vendor; },
-    'WebGL Renderer': function() { return fingerprintJsComponents['webGlBasics'].value.renderer; },
+    'Canvas text': getCanvasText,
+    'Canvas geometry': getCanvasGeometry,
+    'Touch points': getTouchPoints,
     'Cookies enabled': function() { return fingerprintJsComponents['cookiesEnabled'].value; },
+    //'Audio': function() { return fingerprintJsComponents['audio'].value; },
+    'WebGL Vendor': function() { return webGLInfo.vendor },
+    'WebGL Renderer': function() { return webGLInfo.renderer },
+    'WebGL Unmasked Vendor': function() { return webGLInfo.vendorUnmasked },
+    'WebGL Unmasked Renderer': function() { return webGLInfo.rendererUnmasked },
 };
 
 let csvFile = null;
@@ -181,8 +190,52 @@ function getAttributes() {
     return a;
 }
 
+// Get WebGL information. Note that unmasked is more informative, used less in literature.
+// https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_debug_renderer_info
+// Note: Depending on the privacy settings of the browser, 
+// this extension might only be available to privileged contexts or not work at all. 
+// In Firefox, if privacy.resistFingerprinting is set to true, this extensions is disabled.
+// This extension is available to both, WebGL1 and WebGL2 contexts.
+function getWebGLInfo() {
+    let webGLInfo = {
+        vendor: '',
+        vendorUnmasked: '',
+        renderer: '',
+        rendererUnmasked: ''
+    };
+    // set up the webGL context
+    const canvas = document.createElement('canvas')
+    const gl = canvas.getContext('webgl');
+    if (!gl) {
+        console.log('cannot get WebGL info: !gl');
+        return webGLInfo;
+    }
+    if (typeof gl.getParameter !== 'function') {
+        console.log("cannot get WebGL info: typeof gl.getParameter !== 'function'");
+        return webGLInfo;
+    }
+    let vendor = gl.getParameter(gl.VENDOR);
+    let renderer = gl.getParameter(gl.RENDERER);
+    webGLInfo.vendor = (!!vendor) ? vendor.toString() : '';
+    webGLInfo.renderer = (!!renderer) ? renderer.toString() : '';
+    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+    if (!!debugInfo) {
+        const vendorUnmasked = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+        const rendererUnmasked = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        webGLInfo.vendorUnmasked = (!!vendorUnmasked) ? vendorUnmasked.toString() : '';
+        webGLInfo.rendererUnmasked = (!!rendererUnmasked) ? rendererUnmasked.toString() : '';
+    }
+    return webGLInfo;
+}
+let webGLInfo = getWebGLInfo();
+
 function getUserAgent() {
     return window.navigator.userAgent;
+}
+
+function getLanguage() {
+    const n = navigator;
+    return n.language || n.userLanguage || n.browserLanguage || n.systemLanguage;
 }
 
 function getPlugins() {
@@ -191,16 +244,36 @@ function getPlugins() {
         let plugins = fingerprintJsComponents['plugins'].value;
         return JSON.stringify(plugins.map(plugin => plugin.name));
     } catch(e) {
-        console.error('Error flattening component: ', component, e);
+        console.error('Error getting plugins: ', e);
         return;
     }
 }
 
-function getCanvas() {
+function getCanvasText() {
     try { 
         return fingerprintJsComponents['canvas'].value.text;
     } catch(e) {
-        console.error('Error flattening component: ', component, e);
+        console.error('Error getting canvas text: ', e);
+        return;
+    }
+}
+function getCanvasGeometry() {
+    try { 
+        return fingerprintJsComponents['canvas'].value.geometry;
+    } catch(e) {
+        console.error('Error getting canvas geometry: ', e);
+        return;
+    }
+}
+
+function getTouchPoints() {
+    try {
+        const touchSupport = fingerprintJsComponents['touchSupport'].value;
+        if (!!fingerprintJsComponents['touchSupport'].value) {
+            return fingerprintJsComponents['touchSupport'].value.maxTouchPoints;
+        }
+    } catch(e) {
+        console.error('Error getting touch points:', e);
         return;
     }
 }

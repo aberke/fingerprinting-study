@@ -4,23 +4,21 @@
 
 <div class="Q-container">
     <p>
-    We would like to collect attributes from your web browser in order to study how web users' 
-    devices may be tracked across websites they visit. 
-    This data is regularly collected by other websites you visit and is specific to your device.  
-    We will only collect this data if you click "Consent to share".
+        We are asking to collect attributes from your web browser in order to study how devices may be 
+        tracked across websites people visit. 
+        This data is regularly collected by other websites you visit and is specific to your device.  
+        We will only collect this data if you click “Consent to share”.
     </p>
     <br/>
     <p>
-    Data you share will be published for research. 
-    It is possible that if another website collects these attributes, 
-    they can be used to identify your device in the published dataset. 
-    You will be compensated for participating in the study whether you consent or decline to share the data.
+        Data you share will be published for research in a de-identified dataset. 
+        It is possible that if another website collects these attributes, 
+        they can be used to identify your device in the dataset. 
     </p>
     <br/>
     <div id="data-container" class="table-container">
     </div>
     <p id="rows-count" stlye="display: none;"></p>
-    <br/>
     <br/>
 
     <!-- using class instead of id in order to be consistent with Qualtrics usecase -->
@@ -36,12 +34,14 @@
 </div>
 <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
 
+<!-- We use the v3 (not recent v4) fingerprintjs library.  -->
+<!-- We use v3 because it has an open use license. -->
 <!-- This library must be hosted by us because browsers block fingerprintjs domains -->
 <!-- another option is to include the compressed js directly here -->
-<!-- <script src="./fpjs.js"></script> -->
-<script src="https://aberke.github.io/fingerprinting-study/instrument/fpjs.js"></script>
+<script src="./fpjs.js"></script>
+<!-- <script src="https://aberke.github.io/fingerprinting-study/instrument/fpjs.js"></script> -->
 
 
 <!-- use local file for testing only -->
-<script src="./index.js"></script>
-<!-- <script src="https://aberke.github.io/fingerprinting-study/instrument/index.js"></script> -->
+<!-- <script src="./index.js"></script> -->
+<script src="https://aberke.github.io/fingerprinting-study/instrument/index.js"></script>
