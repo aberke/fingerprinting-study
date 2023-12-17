@@ -447,7 +447,6 @@ function main() {
         csvFile = buildCsvFile(attributesToValues);
         // build the table
         buildTable(attributesToValues);
-        checkEnableNext();
         // get the fingerprint only for debugging purposes
         getFingerprint(attributesToValues).then(function(fp) {
             fingerprint = fp;
@@ -466,36 +465,12 @@ let showChoices = function() {
         el.style.display = 'block';
     });
 }
-let hideChoices = function() {
-    document.querySelectorAll(choiceContainerSelector).forEach(function(el) {
-        el.style.display = 'none';
-    });
-}
-let disableNext = function() {
-    if (!qualtricsDeclared) {
-        return console.log('disableNext');
-    }
-    surveyEngine.disableNextButton();
-}
-let enableNext = function() {
-    if (!qualtricsDeclared) {
-        return console.log('enableNext');
-    }
-    surveyEngine.enableNextButton();
-}
-function checkEnableNext() {
-    if (!!choiceSelected) {
-        enableNext();
-    }
-}
 
-let choiceSelected = false;
 main();
 showChoices();
-disableNext();
 
 if (qualtricsDeclared) {
-    let uploadConsent = false;
+    let uploadConsent = true; // default
     surveyEngine.questionclick = function(event, element){
         console.log('surveyEngine.questionclick', event, element)
         // for a single answer multiple choice question, the element type will be radio
@@ -509,9 +484,7 @@ if (qualtricsDeclared) {
             } else {
                 uploadConsent = false;
             }
-            choiceSelected = true;
             console.log('set upload consent to ', uploadConsent);
-            checkEnableNext();
         }
     }
     Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
