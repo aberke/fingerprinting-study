@@ -145,9 +145,9 @@ let attributes = [
     'Screen resolution',
     'Color depth',
     'Platform',
-    // Some browsers making canvas fingerprinting too difficult
-    // 'Canvas text',
-    // 'Canvas geometry',
+    // Some browsers making canvas fingerprinting too difficult: Be careful in how these are used during analysis
+    'Canvas text',
+    'Canvas geometry',
     'Cookies enabled',  // true/false
     // 'Audio', // real number produced by hashing values over a sound wave
     'Touch points', // Touch support max touch points
@@ -156,6 +156,7 @@ let attributes = [
     'WebGL Renderer',
     'Hardware concurrency',
     'Device memory',
+    'UA high entropy values'
 ];
 
 const attributeGetters = {
@@ -169,8 +170,8 @@ const attributeGetters = {
     'Color depth': function() { return fingerprintJsComponents['colorDepth'].value; },
     'Platform': function() { return fingerprintJsComponents['platform'].value; },
     // Some browsers making canvas fingerprinting too difficult
-    // 'Canvas text': getCanvasText,
-    // 'Canvas geometry': getCanvasGeometry,
+    'Canvas text': getCanvasText,
+    'Canvas geometry': getCanvasGeometry,
     'Touch points': getTouchPoints,
     'Cookies enabled': function() { return fingerprintJsComponents['cookiesEnabled'].value; },
     //'Audio': function() { return fingerprintJsComponents['audio'].value; },
@@ -180,6 +181,7 @@ const attributeGetters = {
     'WebGL Unmasked Renderer': function() { return webGLInfo.rendererUnmasked },
     'Hardware concurrency': getHardwareConcurrency,
     'Device memory': getDeviceMemory,
+    'UA high entropy values': function() { return UADataHighEntropyValues; }
 };
 
 let csvFile = null;
@@ -241,6 +243,27 @@ function getWebGLInfo() {
     return webGLInfo;
 }
 let webGLInfo = getWebGLInfo();
+
+// Experimental feature
+let UADataParameters = ['architecture', 'model', 'platform', 'platformVersion'];
+let UADataHighEntropyValues = ''; // Default: no values
+// Returns a promise
+function getUADataHighEntropyValues() {
+    try {
+        if (!navigator.userAgentData) {
+            console.log('!navigator.userAgentData; Returning empty promise.');
+            return Promise.resolve();
+        }
+        return navigator.userAgentData.getHighEntropyValues(UADataParameters)
+        .then((ua) => {
+            UADataHighEntropyValues = JSON.stringify(ua);
+            return UADataHighEntropyValues;
+        });
+    } catch (e) {
+        console.log('Error getting UA high entropy values:', e);
+        return Promise.resolve();
+    }
+}
 
 function getUserAgent() {
     return window.navigator.userAgent;
@@ -442,7 +465,12 @@ function createSurveyResponseForFile(surveyId, responseId, f, fQID) {
 
 function main() {
     // call fingerprintjs which returns a promise
-    FingerprintJS.load()
+    getUADataHighEntropyValues()
+    .then(function (_ua) {
+        console.log('getUA...', _ua)
+        return FingerprintJS.load();
+    })
+    //FingerprintJS.load()
     .then(function(fp) { return fp.get() })
     .then(function(result) { 
         fingerprintJsComponents = result.components;
