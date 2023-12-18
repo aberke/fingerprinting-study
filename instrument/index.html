@@ -16,9 +16,12 @@
         they can be used to identify your device in the dataset. 
     </p>
     <br/>
-    <div id="data-container" class="table-container">
+    <div id="data-container">
+        <p>Here are the attributes we'd like to collect:</p>
+        <div id="table-container">
+        </div>
+        <p id="rows-count"></p>
     </div>
-    <p id="rows-count" stlye="display: none;"></p>
     <br/>
 
     <!-- using class instead of id in order to be consistent with Qualtrics usecase -->
@@ -38,8 +41,8 @@
 <!-- We use v3 because it has an open use license. -->
 <!-- This library must be hosted by us because browsers block fingerprintjs domains -->
 <!-- another option is to include the compressed js directly here -->
-<script src="./fpjs.js"></script>
-<!-- <script src="https://aberke.github.io/fingerprinting-study/instrument/fpjs.js"></script> -->
+<!-- <script src="./fpjs.js"></script> -->
+<script src="https://aberke.github.io/fingerprinting-study/instrument/fpjs.js"></script>
 
 
 <!-- use local file for testing only -->

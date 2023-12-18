@@ -64,9 +64,9 @@ without overriding those Qualtrics styles
 	margin: auto;
 }
 
-.table-container {
+#table-container {
 	max-width: 800px;
-	max-height: 200px;
+	max-height: 230px;
 	overflow-y: scroll;
 	display: grid;
 	font-size: 11px;
@@ -93,6 +93,7 @@ table th, table td {
 	padding: 5px;
 	line-height: initial;
 	min-width: 145px;
+	font-size: 1.1em;
 }
 
 .test-choice-container a {
