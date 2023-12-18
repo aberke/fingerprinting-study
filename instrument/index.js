@@ -145,19 +145,22 @@ let attributes = [
     'Screen resolution',
     'Color depth',
     'Platform',
-    'Canvas text',
-    'Canvas geometry',
+    // Some browsers making canvas fingerprinting too difficult
+    // 'Canvas text',
+    // 'Canvas geometry',
     'Cookies enabled',  // true/false
     // 'Audio', // real number produced by hashing values over a sound wave
     'Touch points', // Touch support max touch points
     // WebGL fingerprinting attributes were added in v4
     'WebGL Vendor',
     'WebGL Renderer',
+    'Hardware concurrency',
+    'Device memory',
 ];
 
 const attributeGetters = {
     'User agent': getUserAgent,
-    'Language': getLanguage,
+    'Languages': getLanguages,
     'Fonts': function() { return getFingerprintJsComponentList('fonts', 2); },
     'Plugins': getPlugins,
     'Local storage': function() { return getFingerprintJsComponentValue('localStorage'); },
@@ -165,8 +168,9 @@ const attributeGetters = {
     'Screen resolution': function() { return getFingerprintJsComponentList('screenResolution', 2); },
     'Color depth': function() { return fingerprintJsComponents['colorDepth'].value; },
     'Platform': function() { return fingerprintJsComponents['platform'].value; },
-    'Canvas text': getCanvasText,
-    'Canvas geometry': getCanvasGeometry,
+    // Some browsers making canvas fingerprinting too difficult
+    // 'Canvas text': getCanvasText,
+    // 'Canvas geometry': getCanvasGeometry,
     'Touch points': getTouchPoints,
     'Cookies enabled': function() { return fingerprintJsComponents['cookiesEnabled'].value; },
     //'Audio': function() { return fingerprintJsComponents['audio'].value; },
@@ -174,6 +178,8 @@ const attributeGetters = {
     'WebGL Renderer': function() { return webGLInfo.renderer },
     'WebGL Unmasked Vendor': function() { return webGLInfo.vendorUnmasked },
     'WebGL Unmasked Renderer': function() { return webGLInfo.rendererUnmasked },
+    'Hardware concurrency': getHardwareConcurrency,
+    'Device memory': getDeviceMemory,
 };
 
 let csvFile = null;
@@ -188,6 +194,13 @@ function getAttributes() {
         a[attributeName] = attributeGetters[attributeName]();
     }
     return a;
+}
+
+function getDeviceMemory() {
+    return navigator.deviceMemory || '';
+}
+function getHardwareConcurrency() {
+    return navigator.hardwareConcurrency || '';
 }
 
 // Get WebGL information. Note that unmasked is more informative, used less in literature.
@@ -233,9 +246,8 @@ function getUserAgent() {
     return window.navigator.userAgent;
 }
 
-function getLanguage() {
-    const n = navigator;
-    return n.language || n.userLanguage || n.browserLanguage || n.systemLanguage;
+function getLanguages() {
+    return navigator.languages;
 }
 
 function getPlugins() {
