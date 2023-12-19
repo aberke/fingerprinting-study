@@ -135,29 +135,6 @@ make a fingerprint with all the values; log it
 if debug: show fingerprint
 
 */
-let attributes = [
-    'User agent',
-    'Languages',
-    'Fonts',            // list
-    'Plugins',          // list
-    'Local storage',    // true/false: Use of local storage
-    'Timezone',
-    'Screen resolution',
-    'Color depth',
-    'Platform',
-    // Some browsers making canvas fingerprinting too difficult: Be careful in how these are used during analysis
-    'Canvas text',
-    'Canvas geometry',
-    'Cookies enabled',  // true/false
-    // 'Audio', // real number produced by hashing values over a sound wave
-    'Touch points', // Touch support max touch points
-    // WebGL fingerprinting attributes were added in v4
-    'WebGL Vendor',
-    'WebGL Renderer',
-    'Hardware concurrency',
-    'Device memory',
-    'UA high entropy values'
-];
 
 const attributeGetters = {
     'User agent': getUserAgent,
@@ -169,9 +146,6 @@ const attributeGetters = {
     'Screen resolution': function() { return getFingerprintJsComponentList('screenResolution', 2); },
     'Color depth': function() { return fingerprintJsComponents['colorDepth'].value; },
     'Platform': function() { return fingerprintJsComponents['platform'].value; },
-    // Some browsers making canvas fingerprinting too difficult
-    'Canvas text': getCanvasText,
-    'Canvas geometry': getCanvasGeometry,
     'Touch points': getTouchPoints,
     'Cookies enabled': function() { return fingerprintJsComponents['cookiesEnabled'].value; },
     //'Audio': function() { return fingerprintJsComponents['audio'].value; },
@@ -181,7 +155,16 @@ const attributeGetters = {
     'WebGL Unmasked Renderer': function() { return webGLInfo.rendererUnmasked },
     'Hardware concurrency': getHardwareConcurrency,
     'Device memory': getDeviceMemory,
-    'UA high entropy values': function() { return UADataHighEntropyValues; }
+    'UA high entropy values': function() { return UADataHighEntropyValues; },
+    // Some browsers making canvas fingerprinting too difficult
+    // We collect it anyway and take extra care during analysis
+    'Canvas text': getCanvasText,
+    'Canvas geometry': getCanvasGeometry,
+    // We collect an array of incremental creations based on the canonical test/what fingerprintjs does
+    // We return only the hash values because otherwise the set of values is very large and we only
+    // wish to study when they diverge.
+    'Canvas text hashed': function () { return JSON.stringify(getCanvasTextHashValues()) },
+    'Canvas geometry hashed': function () { return JSON.stringify(getCanvasGeometryHashValues()) },
 };
 
 let csvFile = null;
@@ -205,7 +188,7 @@ function getHardwareConcurrency() {
     return navigator.hardwareConcurrency || '';
 }
 
-// Get WebGL information. Note that unmasked is more informative, used less in literature.
+// Get WebGL information. Note that unmasked is more informative yet used less in prior work.
 // https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_debug_renderer_info
 // Note: Depending on the privacy settings of the browser, 
 // this extension might only be available to privileged contexts or not work at all. 
@@ -274,29 +257,12 @@ function getLanguages() {
 }
 
 function getPlugins() {
-    try { 
+    try {
         // plugins: {name: 'name', description: 'description', 'mimeTypes': list}
         let plugins = fingerprintJsComponents['plugins'].value;
         return JSON.stringify(plugins.map(plugin => plugin.name));
     } catch(e) {
         console.error('Error getting plugins: ', e);
-        return;
-    }
-}
-
-function getCanvasText() {
-    try { 
-        return fingerprintJsComponents['canvas'].value.text;
-    } catch(e) {
-        console.error('Error getting canvas text: ', e);
-        return;
-    }
-}
-function getCanvasGeometry() {
-    try { 
-        return fingerprintJsComponents['canvas'].value.geometry;
-    } catch(e) {
-        console.error('Error getting canvas geometry: ', e);
         return;
     }
 }
@@ -312,6 +278,114 @@ function getTouchPoints() {
         return;
     }
 }
+
+function getCanvasGeometryHashValues() {
+    // Returns a hash of the images.
+    return getCanvasGeometryInSteps().map((u) => hashCode(u));
+}
+function getCanvasGeometry() {
+    // Returns the last image.
+    return getCanvasGeometryInSteps().pop() || '';
+}
+function getCanvasTextHashValues() {
+    // Returns a hash of the images.
+    return getCanvasTextInSteps().map((u) => hashCode(u));
+}
+function getCanvasText() {
+    // Returns the last image.
+    return getCanvasTextInSteps().pop() || '';
+}
+
+function getCanvasGeometryInSteps() {
+    // Return a list of images representing steps to create a final image.
+    try {
+        const dataURLs = [];
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 120;
+        canvas.height = 120;
+        context.globalCompositeOperation = 'multiply';
+        const drawParams = [['#f2f', 40, 40],['#2ff', 80, 40],['#ff2', 60, 80]];
+        for (var i=0; i<drawParams.length; i++) {
+            let color = drawParams[i][0];
+            let x = drawParams[i][1];
+            let y = drawParams[i][2];
+            context.fillStyle = color;
+            context.beginPath();
+            context.arc(x, y, 40, 0, Math.PI * 2, true);
+            context.closePath();
+            context.fill();
+            dataURLs.push(canvas.toDataURL());
+        }
+        context.fillStyle = '#f9c';
+        context.arc(60, 60, 60, 0, Math.PI * 2, true);
+        context.arc(60, 60, 20, 0, Math.PI * 2, true);
+        context.fill('evenodd');
+        dataURLs.push(canvas.toDataURL());
+        return dataURLs;
+    } catch (e) {
+        console.log('Error getting canvas geometries:', e);
+        return [];
+    }
+ }
+ 
+ function getCanvasTextInSteps() {
+    // Return a list of images representing steps to create a final image.
+    try {
+        const dataURLs = [];
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 240;
+        canvas.height = 60;
+        context.textBaseline = 'alphabetic';
+        context.fillStyle = '#f60';
+        context.fillRect(100, 1, 62, 20);
+        dataURLs.push(canvas.toDataURL());
+
+        context.fillStyle = '#069';
+        context.font = '11pt "Times New Roman"'
+        const printedText = 'Cwm fjordbank gly ';
+        context.fillText(printedText, 2, 15);
+        dataURLs.push(canvas.toDataURL());
+        
+        const t1 = context.measureText(printedText, 2, 15);
+        const emoji = String.fromCharCode(55357, 56835);
+        context.fillText(emoji, 2 + t1.width, 15);
+        dataURLs.push(canvas.toDataURL());
+        context.fillStyle = 'rgba(102, 204, 0, 0.2)';
+        context.font = '18pt Arial';
+        context.fillText(printedText, 4, 45);
+        dataURLs.push(canvas.toDataURL());
+
+        const t2 = context.measureText(printedText, 4, 45);
+        context.fillText(emoji, 4 + t2.width, 45);
+        dataURLs.push(canvas.toDataURL());
+        return dataURLs;
+    } catch (e) {
+        console.log('Error getting canvas text:', e);
+        return '';
+    }
+ }
+
+ // Need a dumb hash function that will work in Qualtrics JS environment
+ // From https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
+/**
+ * Returns a hash code from a string
+ * @param  {String} str The string to hash.
+ * @return {Number}    A 32bit integer
+ * @see http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+ */
+function hashCode(str) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+        let chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+const testStr = 'hashCodeTest'; 
+console.log(testStr, hashCode(testStr));
 
 function getFingerprintJsComponentValue(component) {
     try { 
@@ -466,10 +540,7 @@ function createSurveyResponseForFile(surveyId, responseId, f, fQID) {
 function main() {
     // call fingerprintjs which returns a promise
     getUADataHighEntropyValues()
-    .then(function (_ua) {
-        console.log('getUA...', _ua)
-        return FingerprintJS.load();
-    })
+    .then(function (_ua) { return FingerprintJS.load() })
     //FingerprintJS.load()
     .then(function(fp) { return fp.get() })
     .then(function(result) { 
