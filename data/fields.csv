@@ -1,0 +1,45 @@
+,fields
+ResponseId,Response ID
+showdata,showdata
+Q-demos-age,What is your age group?
+Q-demos-gender,How do you describe yourself?
+Q-demos-hispanic,"Are you of Spanish, Hispanic, or Latino origin?"
+Q-demos-race,Choose one or more races that you consider yourself to be
+Q-demos-income,What was your total household income before taxes during the past 12 months?
+Q-demos-state,"50 States, D.C. and Puerto Rico"
+Q-share-browser-data,"We are asking to collect attributes from your web browser in order to study how devices may be 
+        tracked across websites people visit. 
+        This data is regularly collected by other websites you visit and is specific to your device.  
+        We will not collect this data if you click ""Decline"". 
+    
+    
+
+    
+        Data you allow us to collect will be published for research in a de-identified dataset. 
+        It is possible that if another website collects these attributes, 
+        they can be used to identify your device in the dataset. 
+    
+    
+
+    
+        Here are the attributes we'd like to collect:
+        
+        
+        
+    
+    
+
+
+    
+    
+        
+            Consent to share
+            Decline
+        
+        
+
+        
+
+        (Debug only) Fingerprint:"
+Q-perceptions-1,“I think that I understand how browser fingerprinting works.”
+Q-perceptions-2,“I am concerned that websites and companies try to fingerprint/track my browser.”
