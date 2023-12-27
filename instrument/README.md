@@ -1,5 +1,36 @@
 # Instrument
 
+Data were collected by creating a custom software integration with a Qualtrics Survey.
+
+The survey did 2 special things:
+
+1.
+Collected browser attributes data by querying participants' browsers
+- data were collected __only with explicit consent from participants__.
+Participants had the option to decline to share the browser data and still be paid for participation. In this case, no browser attributes left their machine.
+
+2.
+Embedded an experiment. A random subset of participants had a flag turned on: showdata=true/false.
+- experiment randomization was 50/50.
+- showdata=true: participants were shown the browser attributes that would be collected in a table (see preview below).
+
+Most data were collected by recruiting participants via Prolific. An initial sample was recruited among colleagues. Colleagues used a link with a flag (via URL parameter) to avoid seeing content for Prolific integration. Otherwise all content was the same.
+
+In Qualtrics we used a setting so that participants could only fill out the survey from a given device once (Qualtrics might use fingerprinting!). Also, Prolific participants have no incentive to fill it out more than once since they will only get paid once.
+
+All data were collected in December, 2023.
+
+## Survey links
+
+The survey is closed for data collection, but we provide public preview links.
+
+- Preview link for Prolific participants: [default](https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview&Q_SurveyVersionID=current)
+
+- Preview link for colleagues: [?COLLEAGUE=true](https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview&Q_SurveyVersionID=current&COLLEAGUE=true)
+
+
+- Preview link that forces showdata=true: [?COLLEAGUE=true&showdata=true](https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview&Q_SurveyVersionID=current&COLLEAGUE=true&showdata=true)
+
 
 ## Test page
 
