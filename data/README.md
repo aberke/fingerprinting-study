@@ -17,3 +17,6 @@ It does not include the web browser attributes.
 2. survey-and-browser-attributes-data.csv
 
 This dataset only contains responses from participants who shared their browser attributes data. It contains the browser attributes as well as the survey responses, with a column for each question response and each browser attribute collected.
+
+This data file is stored in github via git LFS.
+To access via git, you must [install git lfs](https://git-lfs.com/) and then use `git lfs pull`.
