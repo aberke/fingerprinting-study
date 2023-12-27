@@ -166,3 +166,5 @@ venv-*
 
 /data/comments.csv
 /data/unprocessed/
+
+.DS_Store
