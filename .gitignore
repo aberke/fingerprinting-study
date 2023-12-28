@@ -164,7 +164,6 @@ cython_debug/
 
 venv-*
 
-/data/comments.csv
 /data/unprocessed/
 
 .DS_Store
