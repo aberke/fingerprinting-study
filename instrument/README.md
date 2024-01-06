@@ -82,16 +82,6 @@ We upload data files to an invisible file upload question.
     - edit this survey question. Select anything (File Name)
     - See in the question: ${q://{FQID}/UploadedFileName}
 
-
-Why do it this way?
-- we want a file upload question type / endpoint to save files to
-- we don't want respondents to directly upload files using the qualtrics file upload question type because:
-    - we need to parse the files in the browser to strip data and present the data to the user
-    - we want the respondent to answer whether they consent to sharing their data and upload the file based on the consent (i.e. use the multiple choice question type)
-    - qualtrics immediately uploads files to the server upon the respondent putting them in a file field
-    - not only does this go against what we say about not saving any user data without full consent first, qualtrics also then removes the file from the file field so we don't have easy access to it: problem
-    - so we create our own file input field in the multiple choice question type and then use this invisible question as an API endpoint to send files to.
-
 ### Set embedded data
 
 We set embedded data (some specific to this survey) to get and use in the questions.
