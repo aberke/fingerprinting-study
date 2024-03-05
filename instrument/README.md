@@ -1,24 +1,39 @@
 # Instrument
 
-Data were collected by creating a custom software integration with a Qualtrics Survey.
+#### Tool preview
+A preview of the data collection tool is available at: https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview 
 
-The survey did 2 special things:
+#### Written content
+A written copy of all survey content, including information about the survey shown to the participants, questions, answer options, and survey logic is also available:
+TODO
 
-1.
-Collected browser attributes data by querying participants' browsers
-- data were collected __only with explicit consent from participants__.
+More information about the data collection tool and specific links are below.
+
+
+#### Data were collected by creating a custom software integration with a Qualtrics Survey.
+
+The survey did 2 notable things:
+
+##### 1. Collected browser attributes data by querying participants' browsers.
+
+Data were collected __only with explicit consent from participants__.
 Participants had the option to decline to share the browser data and still be paid for participation. In this case, no browser attributes left their machine.
 
-2.
-Embedded an experiment. A random subset of participants had a flag turned on: showdata=true/false.
+##### 2.Embedded an experiment. 
+A random subset of participants had a flag turned on: showdata=true/false.
 - experiment randomization was 50/50.
 - showdata=true: participants were shown the browser attributes that would be collected in a table (see preview below).
 
-Most data were collected by recruiting participants via Prolific. An initial sample was recruited among colleagues. Colleagues used a link with a flag (via URL parameter) to avoid seeing content for Prolific integration. Otherwise all content was the same.
+## Participants
 
-In Qualtrics we used a setting so that participants could only fill out the survey from a given device once (Qualtrics might use fingerprinting!). Also, Prolific participants have no incentive to fill it out more than once since they will only get paid once.
+The datset was collected by recruiting participants via [Prolific](https://www.prolific.com/). An initial sample was recruited among colleagues. Colleagues used a link with a flag (via URL parameter) to avoid seeing content for Prolific integration. Otherwise all content was the same.
+
+In Qualtrics we used a setting so that participants could only fill out the survey from a given device once. Also, Prolific participants have no incentive to fill it out more than once since they will only get paid once.
 
 All data were collected in December, 2023.
+
+Colleagues were later excluded from the open dataset in data preprocessing, so the dataset only includes data from Prolific participants.
+
 
 ## Survey links
 
@@ -27,7 +42,6 @@ The survey is closed for data collection, but we provide public preview links.
 - Preview link for Prolific participants: [default](https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview&Q_SurveyVersionID=current)
 
 - Preview link for colleagues: [?COLLEAGUE=true](https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview&Q_SurveyVersionID=current&COLLEAGUE=true)
-
 
 - Preview link that forces showdata=true: [?COLLEAGUE=true&showdata=true](https://mit.co1.qualtrics.com/jfe/preview/previewId/57af6420-22dd-4fef-be93-073ba3864e11/SV_7U8Lxy8p2sdJp4i?Q_CHL=preview&Q_SurveyVersionID=current&COLLEAGUE=true&showdata=true)
 
@@ -46,9 +60,9 @@ Use URL parameters for showdata true/false:
 
 Custom software was developed to make the page where users consent to share browser attributes data.
 
-This only works given a specific survey set up described below and is quirky in order to work around Qualtrics quirks.
+This only works in a Qualtrics survey given a specific set up described below and is quirky in order to work around Qualtrics quirks.
 
-Overview:
+#### Overview:
 
 We use qualtrics and hack together both the [Javascript Questions API](https://api.qualtrics.com/82bd4d5c331f1-qualtrics-java-script-question-api-class) and the [Response API](https://api.qualtrics.com/354c312da7cc7-survey-responses).
 
