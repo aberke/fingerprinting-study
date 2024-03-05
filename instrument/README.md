@@ -5,7 +5,7 @@ A preview of the data collection tool is available at: https://mit.co1.qualtrics
 
 #### Written content
 A written copy of all survey content, including information about the survey shown to the participants, questions, answer options, and survey logic is also available:
-TODO
+https://github.com/aberke/fingerprinting-study/blob/master/instrument/instrument.pdf
 
 More information about the data collection tool and specific links are below.
 
