@@ -56,14 +56,14 @@ The table above includes the number of distinct values in our dataset for each a
 
 We collected all browser attributes via client-side JavaScript that we included in a webpage that participants loaded into their browser when taking the survey, similarly to common fingerprinting scripts.
 
-The following attributes were collected via the open license version of the [FingerprintJS (v3) library](https://github.com/fingerprintjs/fingerprintjs/tree/v3):
+The following attributes were collected via the [open license](https://github.com/fingerprintjs/fingerprintjs/blob/d2a1f546b98971cbdd41329912ad91dac734a468/LICENSE) version of the [FingerprintJS (v3) library](https://github.com/fingerprintjs/fingerprintjs/tree/v3):
 
 Timezone, Screen resolution, Color depth, Platform, Touch points, Fonts, Plugins, Local storage, Cookies enabled.
 
 The other attributes were collected via additional scripting.
 
 #### User agent:
-Sent as a request header to help servers better identify the application, operating system, vendor, and/or version to better serve the user content. 
+Same as the User-Agent HTTP header; it helps servers better identify the application, operating system, vendor, and/or version to better serve the user content. 
 
 Collected via `window.navigator.userAgent'.
 
@@ -83,6 +83,7 @@ Indicates screen width, height pair, accessed via the screen property.
 Collected via FingerprintJS.
 
 #### Color depth:
+The depth of the device screen's color palette in bits per pixel (1, 4, 8, 15, 16, 24, 32, or 48).
 Accessed via `window.screen.colorDepth`.
 
 Collected via FingerprintJS.
@@ -93,6 +94,7 @@ Identifies the platform on which the user's browser is running.
 Collected via FingerprintJS.
 
 #### Touch points:
+The maximum number of simultaneous touch contact points supported by the device. 
 Accessed via `navigator.maxTouchPoints` and set to 0 when unavailable.
 
 Collected via FingerprintJS
