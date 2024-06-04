@@ -1,0 +1,3 @@
+[submodule "data-analysis/how-unique-is-whose-web-browser"]
+	path = data-analysis/how-unique-is-whose-web-browser
+	url = git@github.com:google/how-unique-is-whose-web-browser.git
