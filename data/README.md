@@ -1,5 +1,7 @@
 # Data
 
+The de-identified data are provided for research purposes and should not be used in attempts to re-identify study participants.
+
 Data are downloaded directly from Qualtrics to /data/unprocessed/. The unprocessed data are kept private. 
 
 Preprocessed data are made public.
