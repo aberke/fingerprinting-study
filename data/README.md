@@ -1,29 +1,31 @@
 # Data
 
-The de-identified data are provided for research purposes and should not be used in attempts to re-identify study participants.
+Data were downloaded from Qualtrics to /data/unprocessed/. The unprocessed data are kept private. 
+Preprocessed data are made available for research.
 
-Data are downloaded directly from Qualtrics to /data/unprocessed/. The unprocessed data are kept private. 
+## Dataset access
 
-Preprocessed data are made public.
+We provide two data files.
+Both datasets include survey responses with consistent columns corresonding to each survey question. For both data files, a row corresponds to data from one participant, keyed by the `Response ID`.
 
-There are two public datasets.
-Both datasets include survey responses with consistent columns corresonding to each survey question. For both datasets, a row corresponds to data from one participant, keyed by the `Response ID`.
+#### 1. Survey and experiment data
 
+`survey-experiment-data.csv`
 
-1. survey-experiment-data.csv
-
-This dataset is used for experiment analysis. It contains all completed responses, whether or not participants shared their browser attributes data. 
+This data is used for experiment analysis. It contains all completed responses, whether or not participants shared their browser attributes data. 
 It is used to analyze which factors are most closely associated with participants' likelihood to share that data. It includes a flag indicating which experiment arm (`showdata=true/false`) the participant was in. 
 It does not include the web browser attributes.
 
-2. survey-and-browser-attributes-data.csv
+#### 2. Survey and browser attributes data
 
-This dataset only contains responses from participants who shared their browser attributes data (N=8400). It contains the browser attributes as well as the survey responses, with a column for each question response and each browser attribute collected.
+`survey-and-browser-attributes-data.csv`
 
-This data file is stored in github via git LFS.
-To access via git, you must [install git lfs](https://git-lfs.com/) and then use `git lfs pull`.
+This data only contains responses from participants who shared their browser attributes data (N=8400). It contains the browser attributes as well as the survey responses, with a column for each question response and each browser attribute collected.
 
-Please pull this data once and save locally for your own analyses because there are git lfs bandwidth limits.
+This data file is hosted via Harvard Dataverse: https://doi.org/10.7910/DVN/0SGZFF.
+
+This data is provided for research purposes only.
+Downloading the data requires accepting our terms of use which prohibit attempting to re-identify study participants and prohibit further sharing or publishing the data.
 
 
 ## Browser attributes collected
