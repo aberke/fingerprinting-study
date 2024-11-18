@@ -7,6 +7,8 @@ This data collection process, data publication, and research were approved by th
 
 Please use and cite appropriately.
 
+> Berke, A., Ghazi, B., Bacis, E., Kamath, P., Kumar, R., Lassonde, R., Manurangsi, P. and Syed, U. "How Unique is Whose Web Browser? The role of demographics in browser fingerprinting among US users." Proceedings on Privacy Enhancing Technologies. (2025).  https://doi.org/10.56553/popets-2025-0038
+
 To access the data, see `/data`.
 
 The data collection tooling is in `/instrument`.
